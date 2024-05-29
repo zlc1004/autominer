@@ -39,11 +39,11 @@ For ($i=0; $i -lt $users.Length; $i++) {
     Remove-Item "$($env:USERPROFILE)\out.txt"
     Remove-Item "$($env:USERPROFILE)\out2.txt"
     Remove-Item "$($env:USERPROFILE)\out4.txt"
-    Remove-Item "$($env:USERPROFILE)\out5.txt"
     Remove-Item "$($env:USERPROFILE)\out.f"
     Remove-Item "$($env:USERPROFILE)\out2.f"
     Remove-Item "$($env:USERPROFILE)\out4.f"
-    Remove-Item "$($env:USERPROFILE)\out5.f"
 }
 Remove-Item "$($env:USERPROFILE)\out3.txt"
 Remove-Item "$($env:USERPROFILE)\out3.f"
+Remove-Item "$($env:USERPROFILE)\out5.txt"
+Remove-Item "$($env:USERPROFILE)\out5.f"
