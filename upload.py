@@ -367,6 +367,7 @@ def saveScreenshot():
 
 @app.route('/clear/<passw>')
 def clear(passw):
+    global password
     if password == "":
         return "run /getpass"
     elif passw == password:
