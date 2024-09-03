@@ -1,5 +1,4 @@
-[system.Diagnostics.Process]::Start("msedge", "https://www.youtube.com/watch?v=dQw4w9WgXcQ")
-[system.Diagnostics.Process]::Start("chrome", "https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+
 
 Add-Type -AssemblyName System.Security
 Add-Type -AssemblyName System.Windows.Forms
